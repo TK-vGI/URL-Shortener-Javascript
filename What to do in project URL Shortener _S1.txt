@@ -1,0 +1,134 @@
+/* Stage 1
+HTML: index.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><h1>URL Shortener</h1></header>
+<form>
+    <label for="input-url"></label>
+    <input id="input-url" class="input-url"
+           type="url"
+           name="userInputURL"
+           placeholder="Enter a url"
+           pattern="https://*" required/>
+    <button id="button-create" type="button" onclick="checkURL()">Create</button>
+</form>
+
+<ol id="list-url" type="1"></ol>
+<p id="error-message" class="error-message"></p>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+JS: script.js
+
+// Get input element
+const input = document.getElementById("input-url");
+// Get list element
+const listURL = document.getElementById("list-url");
+// Get button element
+let createBtn = document.getElementById("button-create");
+//Get error message <p> element
+let errorMessage = document.getElementById("error-message");
+// Check validity of input URL link
+function checkURL() {
+    let userInput = input.value;
+    // check input value with RegExp value vor validation
+    if (/^(http(s)?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-.\/?%:#&=]*)?$/.test(userInput) === true) {
+        const createList = document.createElement('li');
+        createShortURL(createList);
+        listURL.appendChild(createList);
+    } else {
+        errorMessage.textContent = "Please enter a valid url";
+    }
+}
+// Create short-link
+function createShortURL(parent) {
+    let shortUrl = '';
+    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < 5; i++)
+        shortUrl += possible.charAt(Math.floor(Math.random() * possible.length));
+    // create link (<a>) element
+    const anchor = document.createElement('a');
+    // set attributes for new link
+    anchor.href = input.value;
+    anchor.target = '_blank';
+    anchor.innerText = `localhost/${shortUrl}`;
+    // create <span> element with actual link, which will be appended to shortURL in list item
+    const textNode = document.createTextNode(` - ${input.value}`);
+    parent.appendChild(anchor);
+    parent.appendChild(textNode);
+}
+
+CSS: style.css
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');*/
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    text-align: left;
+}
+
+h1 {
+    font-size: 30px;
+    color: rebeccapurple;
+}
+
+form {
+    display: inline-block;
+    flex-direction: row;
+    position: relative;
+}
+
+button {
+    background: mediumpurple;
+    border: 1px solid rgb(118, 118, 118);
+    color: #ffffff;
+    font-size: 16px;
+    height: 29px;
+    padding: 0 10px 0 10px;
+    margin: 0;
+    width: auto;
+}
+
+.input-url {
+    color: black;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    height: 30px;
+}
+
+ol {
+    display: block;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    color: black;
+    font-family: Inter,sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.error-message {
+    color: black;
+    font-family: Inter,sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    height: 30px;
+    padding: 0 10px 0 0;
+    margin: 0;
+    width: auto;
+}
+
+End of Stage 1 */
