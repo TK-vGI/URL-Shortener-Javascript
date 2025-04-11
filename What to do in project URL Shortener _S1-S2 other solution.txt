@@ -1,0 +1,31 @@
+/* Alternative stage 1 stage2
+
+function inputAction() {
+    let url = input.value;
+    if (/^(http(s)?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-.\/?%:#&=]*)?$/.test(url) === true) {
+        const createList = document.createElement('li');
+        getRandomShorturl(createList);
+        urlList.appendChild(createList);
+    } else {
+        errorMessage.textContent = "Please enter a valid url";
+    }
+}
+
+function getRandomShorturl(parent) {
+    let text = '';
+    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < 5; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    const anchor = document.createElement('a');
+    anchor.href = input.value;
+    anchor.target = '_blank';
+    anchor.innerText = `localhost/${text}`;
+    const textNode = document.createTextNode(` - ${input.value}`);
+    const span = document.createElement('span');
+    span.innerText = ` - Clicks: 0`;
+    parent.appendChild(anchor);
+    parent.appendChild(textNode);
+    parent.appendChild(span);
+}
+
+*/

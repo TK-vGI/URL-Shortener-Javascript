@@ -28,3 +28,20 @@ document.getElementById("list-url").addEventListener("click", function(e) {
     counter++;
     counterElement.innerText = ' - Clicks: ' + counter;
 })
+
+function deleteAction() {
+    let inputField = document.getElementById("input-url").value;
+    let listItems = document.querySelectorAll("li");
+    if (inputField === null || inputField === '') {
+        // delete all items in list
+        listItems.forEach(listItem => {
+            listItem.remove();
+        });
+    } else {
+        // delete only specific items in list
+        listItems.forEach(listItem => {
+            if (listItem.href === inputField || listItem.innerText.includes(inputField)) {
+                listItem.remove();
+            }});
+    }
+}

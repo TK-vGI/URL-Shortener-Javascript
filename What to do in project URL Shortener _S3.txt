@@ -1,0 +1,155 @@
+/* Stage 3
+HTML: index.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><h1>URL Shortener</h1></header>
+<form>
+    <label for="input-url"></label>
+    <input id="input-url" class="input-url"
+           type="url"
+           name="userInputURL"
+           placeholder="Enter a url"
+           pattern="https://*" required/>
+    <button id="button-create" type="button" onclick="inputAction()">Create</button>
+    <button id="button-delete" type="button" onclick="deleteAction()">Delete</button>
+</form>
+
+<ol id="list-url" type="1"></ol>
+<p id="error-message" class="error-message"></p>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+JS: script.js
+
+let input = document.getElementById('input-url');
+let urlList = document.getElementById('list-url');
+let errorMessage = document.getElementById('error-message');
+
+function inputAction() {
+    let url = input.value;
+    if (/^(http(s)?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-.\/?%:#&=]*)?$/.test(url) === true) {
+        const createList = document.createElement('li');
+        createList.innerHTML = getRandomShorturl();
+        urlList.appendChild(createList);
+    } else {
+        errorMessage.textContent = "Please enter a valid url";
+    }
+}
+
+function getRandomShorturl() {
+    let text = '';
+    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < 5; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return `<a target='_blank' href='${input.value}' >localhost/${text}</a> - ${input.value}<span> - Clicks: 0</span>`;
+}
+
+document.getElementById("list-url").addEventListener("click", function(e) {
+    let counterElement = e.target.nextElementSibling;
+    let countNumber = counterElement.innerText.at(11);
+    let counter = parseInt(countNumber);
+    counter++;
+    counterElement.innerText = ' - Clicks: ' + counter;
+})
+
+function deleteAction() {
+    let inputField = document.getElementById("input-url").value;
+    let listItems = document.querySelectorAll("li");
+    if (inputField === null || inputField === '') {
+        // delete all items in list
+        listItems.forEach(listItem => {
+            listItem.remove();
+        });
+    } else {
+        // delete only specific items in list
+        listItems.forEach(listItem => {
+            if (listItem.href === inputField || listItem.innerText.includes(inputField)) {
+                listItem.remove();
+            }});
+    }
+}
+
+CSS: style.css
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');*/
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    text-align: left;
+}
+
+h1 {
+    font-size: 30px;
+    color: rebeccapurple;
+}
+
+form {
+    display: inline-block;
+    flex-direction: row;
+    position: relative;
+}
+
+button {
+    border: 1px solid rgb(118, 118, 118);
+    border-radius: 4px;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    height: 29px;
+    padding: 0 10px 0 10px;
+    margin: 0;
+    width: auto;
+}
+#button-create {
+    background: mediumpurple;
+    color: #ffffff;
+}
+
+#button-delete {
+    background: lightgrey;
+    color: #000;
+}
+
+.input-url {
+    color: black;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    height: 30px;
+}
+
+ol {
+    display: block;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    color: black;
+    font-family: Inter,sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.error-message {
+    color: black;
+    font-family: Inter,sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    height: 30px;
+    padding: 0 10px 0 0;
+    margin: 0;
+    width: auto;
+}
+
+End of Stage 3 */
