@@ -1,0 +1,220 @@
+/* Stage 5
+HTML: index.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><h1>URL Shortener</h1></header>
+<form>
+    <label for="input-url"></label>
+    <input id="input-url" class="input-url"
+           type="url"
+           name="userInputURL"
+           placeholder="Enter a url"
+           pattern="https://*" required/>
+    <button id="button-create" type="button" onclick="inputAction()">Create</button>
+    <button id="button-delete" type="button" onclick="deleteAction()">Delete</button>
+</form>
+<div class="list">
+    <ol id="list-url" type="1"></ol>
+    <p id="error-message" class="error-message"></p>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
+
+JS: script.js
+
+// Stage 1 - basic functionalities
+let input = document.getElementById('input-url');
+let urlList = document.getElementById('list-url');
+let errorMessage = document.getElementById('error-message');
+// 1. check validity of input;
+function inputAction() {
+    let url = input.value;
+    if (/^(http(s)?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-.\/?%:#&=]*)?$/.test(url) === true) {
+        const createList = document.createElement('li');
+        getShorturl(createList);
+        urlList.appendChild(createList);
+    } else {
+        errorMessage.textContent = "Please enter a valid url";
+    }
+}
+// 2. create short URL and append to HTML <ol> list
+function getShorturl(parent) {
+    let shortUrl = '';
+    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < 5; i++)
+        shortUrl += possible.charAt(Math.floor(Math.random() * possible.length));
+    const anchor = document.createElement('a');
+    anchor.href = input.value;
+    anchor.target = '_blank';
+    anchor.innerText = `localhost/${shortUrl}`;
+    const textNode = document.createTextNode(` - ${input.value}`);
+    const span = document.createElement('span');
+    span.innerText = ` - Clicks: 0`;
+    const editButton = document.createElement('button');    // Stage 4 edit/save button
+    editButton.innerText = 'Edit';
+    editButton.id='button-edit';
+    editButton.addEventListener('click', function() {
+        editAction(editButton, shortUrl, anchor);
+    });
+    parent.appendChild(anchor);
+    parent.appendChild(textNode);
+    parent.appendChild(span);
+    parent.appendChild(editButton);
+}
+
+// Stage 2 - add counting functionality ('CLicks') for short URL links
+document.getElementById("list-url").addEventListener("click", function (e) {
+    let counterElement = e.target.nextElementSibling;
+    let countNumber = counterElement.innerText.at(11);
+    let counter = parseInt(countNumber);
+    counter++;
+    counterElement.innerText = ' - Clicks: ' + counter;
+})
+
+// Stage 3 - add delete button functionality
+function deleteAction() {
+    let inputField = document.getElementById("input-url").value;
+    let listItems = document.querySelectorAll("li");
+    if (inputField === null || inputField === '') {
+        // delete all items in list
+        listItems.forEach(listItem => {
+            listItem.remove();
+        });
+    } else {
+        // delete only specific items in list
+        listItems.forEach(listItem => {
+            if (listItem.href === inputField || listItem.innerText.includes(inputField)) {
+                listItem.remove();
+            }
+        });
+    }
+}
+
+// Stage 4 - add edit/save button functionality
+function editAction(editButton, shortUrl, anchor) {
+    const listItem = editButton.parentElement;
+    if (editButton.innerText === 'Edit') {                                        // Switch to Edit Mode
+        const input = document.createElement('input');
+        input.value = shortUrl;
+        listItem.replaceChild(input, anchor);                                     // Replace link with input
+
+        editButton.innerText = 'Save';                                            // Change button text to Save
+    } else if (editButton.innerText === 'Save') {                                 // Switch to Save Mode
+        const input = listItem.querySelector('input');
+        const newShortUrl = input.value.trim();
+        if (newShortUrl.length >= 5) {
+            anchor.innerText = `localhost/${newShortUrl}`;                        // Update the text with new short URL
+            listItem.replaceChild(anchor, input);                                 // Replace input with link
+        }
+        editButton.innerText = 'Edit';                                            // Change button text back to Edit
+    }
+}
+
+CSS: style.css
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');*/
+
+* {
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    font-size: 30px;
+    color: rgb(9, 77, 143);
+}
+
+form {
+    /*display: block;*/
+    justify-self: center;
+}
+
+button {
+    border: 1px solid #1E90FFFF;
+    border-radius: 4px;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    height: 29px;
+    padding: 0 10px 0 10px;
+    margin: 0;
+    width: auto;
+}
+
+#button-create {
+    background: dodgerblue;
+    color: #fff;
+}
+
+#button-delete {
+    background: dodgerblue;
+    color: #fff;
+}
+
+.input-url {
+    background-color: white;
+    border: 2px solid #1E90FFFF;
+    border-radius: 4px;
+    color: rgb(9, 77, 143);
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    height: 30px;
+}
+
+.input-url::placeholder {
+    color: rgb(9, 77, 143);
+}
+
+div.list {
+    background-color: rgba(135, 206, 250, 0.6);
+    border-radius: 10px;
+    padding: 5px;
+    margin: 10px 0 10px 0;
+}
+
+ol {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    color: #010150;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+ol li {
+    height: 40px;
+}
+
+.error-message {
+    color: black;
+    font-family: Inter, sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    height: 30px;
+    padding: 0 10px 0 0;
+    margin: 0;
+    width: auto;
+}
+
+#button-edit {
+    background: dodgerblue;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
+    height: 30px;
+    margin: 0 0 0 10px;
+    width: 60px;
+}
+
+End of Stage 5 */

@@ -5,27 +5,23 @@
     box-sizing: border-box;
 }
 
-body {
-    text-align: left;
-}
-
 h1 {
+    text-align: center;
     font-size: 30px;
-    color: rebeccapurple;
+    color: rgb(9, 77, 143);
 }
 
 form {
-    display: inline-block;
-    flex-direction: row;
-    position: relative;
+    /*display: block;*/
+    justify-self: center;
 }
 
 button {
-    border: 1px solid rgb(118, 118, 118);
+    border: 1px solid #1E90FFFF;
     border-radius: 4px;
     font-family: Inter, sans-serif;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 400;
     height: 29px;
     padding: 0 10px 0 10px;
     margin: 0;
@@ -33,36 +29,54 @@ button {
 }
 
 #button-create {
-    background: mediumpurple;
-    color: #ffffff;
+    background: dodgerblue;
+    color: #fff;
 }
 
 #button-delete {
-    background: lightgrey;
-    color: #000;
+    background: dodgerblue;
+    color: #fff;
 }
 
 .input-url {
-    color: black;
+    background-color: white;
+    border: 2px solid #1E90FFFF;
+    border-radius: 4px;
+    color: rgb(9, 77, 143);
     font-family: Inter, sans-serif;
     font-size: 16px;
     font-weight: 400;
     height: 30px;
 }
 
+.input-url::placeholder {
+    color: rgb(9, 77, 143);
+}
+
+div.list {
+    background-color: rgba(135, 206, 250, 0.6);
+    border-radius: 10px;
+    padding: 5px;
+    margin: 10px 0 10px 0;
+}
+
 ol {
-    display: block;
+    display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    color: black;
-    font-family: Inter,sans-serif;
-    font-size: 16px;
+    color: #010150;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
     font-weight: 400;
+}
+
+ol li {
+    height: 40px;
 }
 
 .error-message {
     color: black;
-    font-family: Inter,sans-serif;
+    font-family: Inter, sans-serif;
     font-size: 24px;
     font-weight: 500;
     height: 30px;
@@ -72,10 +86,11 @@ ol {
 }
 
 #button-edit {
-    border-radius: 2px;
-    font-size: 16px;
-    font-weight: 500;
-    height: 20px;
+    background: dodgerblue;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
+    height: 30px;
     margin: 0 0 0 10px;
-    width: auto;
+    width: 60px;
 }
