@@ -1,0 +1,151 @@
+/* Stage 4
+HTML: index.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>URL Shortener</title>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+    <label for="input-url"></label>
+    <input type="url" name="url" id="input-url" placeholder="Enter a url">
+    <button id="button-create">Create</button>
+    <button id="button-delete">Delete</button>
+    <p id="error"></p>
+    <ol id="list-url"></ol>
+
+    <script src="./urlShortener.js"></script>
+</body>
+</html>
+
+JS: script.js
+
+let inputUrl = document.getElementById("input-url");
+let buttonCreate = document.getElementById("button-create");
+let buttonDelete = document.getElementById("button-delete");
+let listUrl = document.getElementById("list-url");
+let error = document.getElementById("error");
+
+class Link {
+    constructor(
+        shortDomain,
+        short,
+        original,
+        clicks
+    ) {
+        this.shortDomain = shortDomain;
+        this.short = short;
+        this.original = original;
+        this.clicks = clicks;
+    }
+}
+
+let links = [];
+
+buttonCreate.addEventListener("click", function() {
+    processInput();
+});
+
+inputUrl.addEventListener("keypress", function(event) {
+    console.log(this);
+
+    if (event.key === "Enter") {
+        processInput();
+    }
+});
+
+buttonDelete.addEventListener("click", function() {
+    if (inputUrl.value.length === 0) {
+        links = [];
+    } else {
+        links = links.filter(link => link.original !== inputUrl.value);
+    }
+    renderLinks();
+});
+
+function processInput() {
+    error.textContent = "";
+    let validUrl = /^(http(s)?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-.\/?%:#&=]*)?$/;
+
+    if (!validUrl.test(inputUrl.value)) {
+        error.textContent = "Please enter a valid url";
+        return;
+    }
+
+    updateList(inputUrl);
+}
+
+function updateList(inputUrl) {
+    let link = new Link("localhost/", getRandomUrl(), inputUrl.value, 0);
+    links.push(link);
+    renderLinks();
+}
+
+function renderLinks() {
+    listUrl.innerHTML = "";
+    links.forEach(function(link) {
+        let list = document.createElement("li");
+        let listLink = document.createElement("a");
+        let spanCounter = document.createElement("span");
+
+        let listText = document.createTextNode(` - ${link.original} - `);
+
+        spanCounter.textContent = `Clicks: 0`;
+
+        let buttonEdit = document.createElement("button");
+        buttonEdit.textContent = "Edit";
+
+        let shortInput = document.createElement("input");
+
+        buttonEdit.addEventListener("click", function() {
+            let buttonMode = buttonEdit.textContent;
+            if (buttonMode === "Edit") {
+                listLink.remove();
+                shortInput.value = link.short;
+                buttonEdit.textContent = "Save";
+
+                list.prepend(shortInput);
+            }
+
+            if (buttonMode === "Save") {
+                shortInput.remove();
+                link.short = shortInput.value;
+                buttonEdit.textContent = "Edit";
+                listLink.textContent = link.shortDomain + link.short;
+                list.prepend(listLink);
+            }
+        });
+
+        listLink.addEventListener("click", function() {
+            spanCounter.textContent = `Clicks: ${++link.clicks}`;
+        });
+
+        listLink.href = link.original;
+        listLink.target = "_blank";
+        listLink.textContent = link.shortDomain + link.short;
+        list.appendChild(listLink);
+        list.appendChild(listText);
+        list.appendChild(spanCounter);
+        list.appendChild(buttonEdit);
+
+        listUrl.appendChild(list);
+    })
+}
+
+function getRandomUrl() {
+    let randomElement = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let shortUrl = "";
+
+    for(let i=0; i < 5; i++) {
+        let randomIndex = Math.floor(Math.random() * randomElement.length);
+        shortUrl += randomElement[randomIndex];
+    }
+
+    return shortUrl;
+}
+
+CSS: style.css
+
+End of Stage 4 */
